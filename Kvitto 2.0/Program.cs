@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections;
 
 namespace MyReciept
 {
     class Program
     {
-        struct Article
+        struct Article 
         {
             public string Name;
             public decimal Price;
 
+            
         }
 
 
@@ -20,8 +22,7 @@ namespace MyReciept
         static int nrArticles;
 
         static void Main(string[] args)
-        {
-            //           ReadArticles();
+        {           
             Menu();           
             Console.ReadLine();
         }
@@ -36,28 +37,47 @@ namespace MyReciept
             Console.WriteLine("3 - Print receipt sorted by price");
             Console.WriteLine("4 - Print receipt sorted by name");
             Console.WriteLine("5 - Quit");
-            int choice = Convert.ToInt32(Console.ReadLine());
+            try
+            {
+                int choice = Convert.ToInt32(Console.ReadLine());
 
-            if (choice == 1)
-            {
-                EnterAnArticle();
-            }
-            else if (choice == 2)
-            {
-                DeleteArticle();
-            }
-            else if (choice == 3)
-            {
-                PrintReciept();
-            }
-            else if (choice == 4)
-            {
+
+                if (choice == 1)
+                {
+                    EnterAnArticle();
+                }
+                else if (choice == 2)
+                {
+                    DeleteArticle();
+                }
+                else if (choice == 3)
+                {
+                    PrintSortName();
+                }
+                else if (choice == 4)
+                {
+                    PrintSortPrice();
+                }
+                else if (choice == 5)
+                {
+                    Console.Clear();
+                }
+                else if (choice != 1 || choice != 2 || choice != 3 || choice != 4 || choice != 5)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Error: the number must be a number between 1-5. Try again!");
+                    Menu();
+                }
 
             }
-            else if (choice == 5)
+            catch (FormatException)
             {
                 Console.Clear();
+                Console.WriteLine("Error, you need to type a number between 1-5. Try again!");
+                Console.WriteLine();
+                Menu();
             }
+
 
 
         }
@@ -75,10 +95,12 @@ namespace MyReciept
                 {
                     articles[nrArticles] = new Article { Name = input[0], Price = price };
                     nrArticles++;
+                    Console.Clear();
                 }
                 else
                 {
-                    Console.WriteLine();
+                    
+                    Console.Clear();
                     Console.WriteLine("Name error, pls try again!");
                     Console.WriteLine();
                 }
@@ -86,12 +108,13 @@ namespace MyReciept
             }
             catch (IndexOutOfRangeException)
             {
+                Console.Clear();
                 Console.WriteLine("Format error, pls try again!");
                 Console.WriteLine();
             }
             catch (FormatException)
             {
-                Console.WriteLine();
+                Console.Clear();
                 Console.WriteLine("Price error, pls try again!");
                 Console.WriteLine();
             }
@@ -103,18 +126,27 @@ namespace MyReciept
             string remove = Console.ReadLine();
             remove.ToLower();
 
-            for (int i = 0; i < articles.Length; i++)
+            for (int i = 0; i <= articles.Length; i++)
             {
                 if (remove == articles[i].Name)
                 {
                     articles[i] = new Article();
                     nrArticles--;
+                    Menu();
                 }
+                else
+                {
+                    Console.WriteLine($"Error: Article{remove} was not found. Cannot remove!");
+                    Menu();
+                    break;
+                }
+                
             }
-            Menu();
+            
         }
         static void PrintSortName()
         {
+            Console.WriteLine();
             Console.WriteLine("Reciept Purchased Articles");
             Console.WriteLine($"Purchase date: {DateTime.Now}");
             Console.WriteLine();
@@ -124,17 +156,25 @@ namespace MyReciept
             Console.WriteLine();
             Console.WriteLine($"{"#Name",-25} {"Price"}");
 
-            for (int i = 0; i < nrArticles; i++)
+            for (int a = 0; a <= articles.Length; a++)
             {
-                if (articles[i].Name != null || articles[i].Price != 0)
+
+                int minIndex = a;
+
+                for (int i = a + 1; i <= articles.Length; i++)
                 {
                     totalPrice += articles[i].Price;
-
-                    Console.Write($"{articles[i].Name,-25}{articles[i].Price:c}");
-                    Console.WriteLine();
-
+                    if (articles[i].Name != null && articles[i].Name.CompareTo(articles[minIndex].Name) < 0) minIndex = i;
                 }
 
+                Article tmp = articles[a];
+                articles[a] = articles[minIndex];
+                articles[minIndex] = tmp;
+                if (articles[a].Name != null)
+                {
+                    Console.WriteLine($"{articles[a].Name,-25}{articles[a].Price:c}");
+                }
+                
             }
 
 
@@ -146,6 +186,7 @@ namespace MyReciept
         }
         static void PrintSortPrice()
         {
+            Console.WriteLine();
             Console.WriteLine("Reciept Purchased Articles");
             Console.WriteLine($"Purchase date: {DateTime.Now}");
             Console.WriteLine();
@@ -154,20 +195,27 @@ namespace MyReciept
             decimal vat = 0;
             Console.WriteLine();
             Console.WriteLine($"{"#Name",-25} {"Price"}");
-            
-            for (int i = 0; i < nrArticles; i++)
+
+            for (int a = 0; a < articles.Length - 1; a++)
             {
-                if (articles[i].Name != null || articles[i].Price != 0)
+
+                int minIndex = a;
+
+                for (int i = a + 1; i < articles.Length; i++)
                 {
                     totalPrice += articles[i].Price;
+                    if (articles[i].Price != 0 && articles[i].Price.CompareTo(articles[minIndex].Price) < 0) minIndex = i;
+                }
 
-                    Console.Write($"{articles[i].Name,-25}{articles[i].Price:c}");
-                    Console.WriteLine();
-
+                Article tmp = articles[a];
+                articles[a] = articles[minIndex];
+                articles[minIndex] = tmp;
+                if (articles[a].Name != null)
+                {
+                    Console.WriteLine($"{articles[a].Name,-25}{articles[a].Price:c}");
                 }
 
             }
-
 
             Console.WriteLine();
             Console.WriteLine($"{"Total price:",-25}{totalPrice:c}");
@@ -252,7 +300,7 @@ namespace MyReciept
             }
             Console.Clear();
 
-        }
+        } //Användes i g uppgiften
         private static void PrintReciept()
         {
             Console.WriteLine("Reciept Purchased Articles");
@@ -280,7 +328,7 @@ namespace MyReciept
             vat = totalPrice * _vat;
             Console.WriteLine($"{"Includes VAT (25%):",-25}{vat:c}");
             Menu();
-        }
+        } //Användes i g uppgiften
 
         
     }
