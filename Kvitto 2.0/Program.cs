@@ -224,6 +224,8 @@ namespace MyReciept
             Menu();
         }
 
+
+        //Används endast i G Uppgiften
         private static void ReadArticles()
         {
             try
@@ -300,7 +302,9 @@ namespace MyReciept
             }
             Console.Clear();
 
-        } //Användes i g uppgiften
+        }
+
+        //Används endast i G Uppgiften
         private static void PrintReciept()
         {
             Console.WriteLine("Reciept Purchased Articles");
@@ -328,7 +332,7 @@ namespace MyReciept
             vat = totalPrice * _vat;
             Console.WriteLine($"{"Includes VAT (25%):",-25}{vat:c}");
             Menu();
-        } //Användes i g uppgiften
+        } 
 
         
     }
