@@ -78,8 +78,6 @@ namespace MyReciept
                 Menu();
             }
 
-
-
         }
 
         static void EnterAnArticle()
@@ -156,12 +154,12 @@ namespace MyReciept
             Console.WriteLine();
             Console.WriteLine($"{"#Name",-25} {"Price"}");
 
-            for (int a = 0; a <= articles.Length; a++)
+            for (int a = 0; a < nrArticles; a++)
             {
 
                 int minIndex = a;
 
-                for (int i = a + 1; i <= articles.Length; i++)
+                for (int i = a +1; i < nrArticles; i++)
                 {
                     totalPrice += articles[i].Price;
                     if (articles[i].Name != null && articles[i].Name.CompareTo(articles[minIndex].Name) < 0) minIndex = i;
@@ -196,12 +194,12 @@ namespace MyReciept
             Console.WriteLine();
             Console.WriteLine($"{"#Name",-25} {"Price"}");
 
-            for (int a = 0; a < articles.Length - 1; a++)
+            for (int a = 0; a < nrArticles; a++)
             {
 
                 int minIndex = a;
 
-                for (int i = a + 1; i < articles.Length; i++)
+                for (int i = a + 1; i < nrArticles; i++)
                 {
                     totalPrice += articles[i].Price;
                     if (articles[i].Price != 0 && articles[i].Price.CompareTo(articles[minIndex].Price) < 0) minIndex = i;
